@@ -21,7 +21,8 @@
     <form method="GET" action="/admin">
         <div class="row">
             <div class="col m10 input-field">
-                <input class="blue-text" name="q" type="search" placeholder="Search">
+                <!-- Task 4.2: Show the query in the search bar -->
+                <input class="blue-text" name="q" type="search" placeholder="Search" value="{{ q }}">
             </div>
             <div class="col m2 input-field">
                 <div class="row">
@@ -58,13 +59,14 @@
         </tbody>
     </table>
 
-    <!-- Pagination Controls with Limit -->
+    <!-- Pagination Controls with Limit and Search Query -->
     <div class="row" style="display: flex; align-items: center; justify-content: center; position: relative;">
 
         <ul class="pagination" style="margin: 0;">
             {% if pagination.has_prev %}
             <li class="waves-effect">
-                <a href="/admin?page={{ pagination.prev_num }}&limit={{ pagination.limit }}">
+                <!-- Task 4.3: Persist q in navigation -->
+                <a href="/admin?page={{ pagination.prev_num }}&limit={{ pagination.limit }}{% if q %}&q={{ q }}{% endif %}">
                     <i class="material-icons">chevron_left</i>
                 </a>
             </li>
@@ -80,7 +82,8 @@
                     <li class="active blue"><a href="#!">{{ page_num }}</a></li>
                     {% else %}
                     <li class="waves-effect">
-                        <a href="/admin?page={{ page_num }}&limit={{ pagination.limit }}">{{ page_num }}</a>
+                        <!-- Task 4.3: Persist q in navigation -->
+                        <a href="/admin?page={{ page_num }}&limit={{ pagination.limit }}{% if q %}&q={{ q }}{% endif %}">{{ page_num }}</a>
                     </li>
                     {% endif %}
                 {% else %}
@@ -90,7 +93,8 @@
 
             {% if pagination.has_next %}
             <li class="waves-effect">
-                <a href="/admin?page={{ pagination.next_num }}&limit={{ pagination.limit }}">
+                <!-- Task 4.3: Persist q in navigation -->
+                <a href="/admin?page={{ pagination.next_num }}&limit={{ pagination.limit }}{% if q %}&q={{ q }}{% endif %}">
                     <i class="material-icons">chevron_right</i>
                 </a>
             </li>
@@ -104,7 +108,8 @@
         <div class="input-field" style="position: absolute; right: 25px; margin: 0; ">
             <select id="limit-select" onchange="location = this.value;">
                 {% for n in [10, 25, 50, 100] %}
-                <option value="/admin?page=1&limit={{ n }}" {% if pagination.limit == n %}selected{% endif %}>
+                <!-- Task 4.3: Persist q in limit dropdown -->
+                <option value="/admin?page=1&limit={{ n }}{% if q %}&q={{ q }}{% endif %}" {% if pagination.limit == n %}selected{% endif %}>
                     {{ n }} rows
                 </option>
                 {% endfor %}
@@ -112,12 +117,15 @@
         </div>
     </div>
     
-    <!-- Optional: Show current page info -->
+    <!-- Show current page and search info -->
     <div class="row">
         <div class="col s12 center grey-text">
             <small>
                 Showing {{ todos|length }} of {{ pagination.total_count }} todos 
                 (Page {{ pagination.page }} of {{ pagination.total_pages }})
+                {% if q %}
+                <br>Search results for: <strong>"{{ q }}"</strong>
+                {% endif %}
             </small>
         </div>
     </div>
