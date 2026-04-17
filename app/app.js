@@ -68,5 +68,25 @@ async function deleteTodo(id){
   
   displayTodos(todos);
 }
-
 loadView();
+async function createTodo(event){
+  event.preventDefault();//stop the form from reloading the page
+  let form = event.target.elements;//get the form from the event object
+
+  let data = {
+    text: form['addText'].value,//get data from form
+    done: false,// newly created todos aren't done by default
+  }
+
+  event.target.reset();//reset form
+
+  let result = await sendRequest(`${server}/todo`, 'POST', data);
+
+  if('error' in result){
+    toast('Error: Not Logged In');
+  }else{
+    toast('Todo Created!');
+  }
+    
+  loadView();
+}
