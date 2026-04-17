@@ -90,3 +90,7 @@ async function createTodo(event){
     
   loadView();
 }
+function logout(){
+  window.localStorage.removeItem('access_token');
+  window.location.href ="index.html";
+}
